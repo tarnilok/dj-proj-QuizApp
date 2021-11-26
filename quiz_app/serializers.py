@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from dj_rest_auth.serializers import TokenSerializer
 
-# Auth Serializers
+from quiz_app.models import Quiz, Category, Answer, Question
+
+#! Auth Serializers
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.CharField(required=True, validators=[validators.UniqueValidator(queryset=User.objects.all())])
     password = serializers.CharField(write_only = True, required=True, validators=[validate_password], style={"input_type":"password"})
@@ -42,3 +44,33 @@ class CustomTokenSerializer(TokenSerializer):
     user = UserTokenSerializer(read_only=True)
     class Meta(TokenSerializer.Meta):
         fields = ('key', 'user')
+        
+#! View Serializers
+class CategorySerializer(serializers.ModelSerializer):
+    numberOfQuizzesIncluded = serializers.SerializerMethodField()
+    class Meta:  
+        model = Category
+        fields = ['id', 'name', 'numberOfQuizzesIncluded']
+        
+    def get_numberOfQuizzesIncluded(self, obj):
+        return Quiz.objects.filter(category_id=obj.id).count()
+
+class QuizSerializer(serializers.ModelSerializer):
+    numberOfQuestionIncluded = serializers.SerializerMethodField()
+    class Meta:
+        model = Quiz
+        fields = ['title', 'numberOfQuestionIncluded']
+        
+    def get_numberOfQuestionIncluded(self, obj):
+        return Question.objects.filter(quiz_id=obj.id).count()
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ['answer_text', 'is_right']
+      
+class QuestionSerializer(serializers.ModelSerializer):
+    answer = AnswerSerializer(many=True)
+    difficulty = serializers.StringRelatedField()
+    class Meta:
+        model = Question
+        fields = ['title', 'answer', 'difficulty']

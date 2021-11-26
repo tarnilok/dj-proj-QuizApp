@@ -6,7 +6,7 @@ class Category(models.Model):
     name = models.CharField(max_length=30, verbose_name=t('Category Name'))
      
     def __str__ (self):
-        return f"Quiz Category: {self.name}"
+        return self.name
     
     class Meta:
         verbose_name = t('Category')
@@ -14,17 +14,17 @@ class Category(models.Model):
         ordering = ['name']
     
 class Quiz(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     title = models.CharField(max_length=30, verbose_name=t('Title'))
     createdDate = models.DateTimeField(auto_now_add=True)
     
     def __str__ (self):
-        return f"Quiz Name: {self.title}"
+        return self.title
     
     class Meta:
         verbose_name = t('Quiz')
         verbose_name_plural = t('Quizzes')
-        ordering = ['title']
+        ordering = ['id']
 
 class Updated(models.Model):
     updatedDate = models.DateTimeField(auto_now=True, verbose_name=t('Last Updated')) 
@@ -34,28 +34,28 @@ class Updated(models.Model):
 
 class Question(Updated):
     scale = {
-        (0, t('Starter')),
-        (1, t('Elementary')),
-        (2, t('Beginner')),
-        (3, t('Intermediate')),
-        (4, t('Advanced')),
-        (5, t('Expert'))
+        (t('Starter'), t('Starter')),
+        (t('Elementary'), t('Elementary')),
+        (t('Beginner'), t('Beginner')),
+        (t('Intermediate'), t('Intermediate')),
+        (t('Advanced'), t('Advanced')),
+        (t('Expert'), t('Expert'))
     }
  
-    quiz = models.ForeignKey(Quiz, related_name='question', on_delete=models.DO_NOTHING)
-    title = models.CharField(max_length=30, verbose_name=t('Title'))
-    difficulty = models.IntegerField(choices=scale, verbose_name=t('Difficulty'))
+    quiz = models.ForeignKey(Quiz, related_name='question', on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, verbose_name=t('Title'))
+    difficulty = models.CharField(max_length=20,choices=scale, verbose_name=t('Difficulty'))
     date_created = models.DateTimeField(auto_now_add=True, verbose_name=t('Date Created'))
     
     def __str__ (self):
-        return {self.title}
+        return self.title
     class Meta:
         verbose_name = t('Question')
         verbose_name_plural = t('Question')
         ordering = ['title']
     
 class Answer(Updated):
-    question = models.ForeignKey(Question, related_name='answer', on_delete=models.DO_NOTHING)
+    question = models.ForeignKey(Question, related_name='answer', on_delete=models.CASCADE)
     answer_text = models.CharField(max_length=255, verbose_name=t('Answer Text'))
     is_right = models.BooleanField(default=False)
     
@@ -63,4 +63,5 @@ class Answer(Updated):
         verbose_name = t('Answer')
         verbose_name_plural = t('Answers')
         ordering = ['id']
+    
     
