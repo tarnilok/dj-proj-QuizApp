@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # 'allauth.account',
     # 'allauth.socialaccount',
     # 'dj_rest_auth.registration',
+    'nested_admin',
     
     #swagger
     'drf_yasg',
