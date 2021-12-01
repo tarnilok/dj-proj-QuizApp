@@ -59,18 +59,18 @@ class QuizSerializer(serializers.ModelSerializer):
     numberOfQuestionIncluded = serializers.SerializerMethodField()
     class Meta:
         model = Quiz
-        fields = ['title', 'numberOfQuestionIncluded']
+        fields = ['id', 'title', 'numberOfQuestionIncluded']
         
     def get_numberOfQuestionIncluded(self, obj):
         return Question.objects.filter(quiz_id=obj.id).count()
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ['answer_text', 'is_right']
+        fields = ['id', 'answer_text', 'is_right']
       
 class QuestionSerializer(serializers.ModelSerializer):
     answer = AnswerSerializer(many=True)
     difficulty = serializers.StringRelatedField()
     class Meta:
         model = Question
-        fields = ['title', 'answer', 'difficulty']
+        fields = ['id', 'title', 'answer', 'difficulty']

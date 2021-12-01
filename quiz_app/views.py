@@ -7,6 +7,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from .models import Question, Answer, Category, Quiz
 from .serializers import CategorySerializer, QuizSerializer, QuestionSerializer
+from .permissions import IsUserOrNotAllowed
 
 #!Auth views
 class RegisterApi(CreateAPIView):
@@ -25,7 +26,7 @@ class RegisterApi(CreateAPIView):
 class CategoryList(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-
+    permission_classes = [IsUserOrNotAllowed]
 class QuizList(APIView): 
     def get(self, request, format=None, **kwargs):
         category_name = Quiz.objects.filter(category__name=kwargs['category'])
