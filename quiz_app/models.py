@@ -33,18 +33,18 @@ class Updated(models.Model):
         abstract = True
 
 class Question(Updated):
-    scale = {
-        (t('Starter'), t('Starter')),
-        (t('Elementary'), t('Elementary')),
-        (t('Beginner'), t('Beginner')),
-        (t('Intermediate'), t('Intermediate')),
-        (t('Advanced'), t('Advanced')),
-        (t('Expert'), t('Expert'))
-    }
+    scale = [
+        ('Starter', 'Starter'),
+        ('Elementary', 'Elementary'),
+        ('Beginner', 'Beginner'),
+        ('Intermediate', 'Intermediate'),
+        ('Advanced', 'Advanced'),
+        ('Expert', 'Expert')
+    ]
  
     quiz = models.ForeignKey(Quiz, related_name='question', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name=t('Title'))
-    difficulty = models.CharField(max_length=20,choices=scale, verbose_name=t('Difficulty'))
+    difficulty = models.CharField(max_length=255,choices=scale)
     date_created = models.DateTimeField(auto_now_add=True, verbose_name=t('Date Created'))
     
     def __str__ (self):
