@@ -15,7 +15,7 @@ class Category(models.Model):
     
 class Quiz(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    title = models.CharField(max_length=30, verbose_name=t('Title'))
+    title = models.CharField(max_length=30, verbose_name=t('Title'), unique=True)
     createdDate = models.DateTimeField(auto_now_add=True)
     
     def __str__ (self):
@@ -41,7 +41,6 @@ class Question(Updated):
         ('Advanced', 'Advanced'),
         ('Expert', 'Expert')
     ]
- 
     quiz = models.ForeignKey(Quiz, related_name='question', on_delete=models.CASCADE)
     title = models.CharField(max_length=255, verbose_name=t('Title'))
     difficulty = models.CharField(max_length=255,choices=scale)
